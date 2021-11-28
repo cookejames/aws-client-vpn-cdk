@@ -1,14 +1,6 @@
-# Welcome to your CDK TypeScript project!
+# AWS VPN
 
-This is a blank project for TypeScript development with CDK.
-
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
-
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+1. [Create certs](https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/client-authentication.html#mutual)
+2. Create SSM parameter `vpn-server-certificate` with ARN of certificate
+3. Enable SES
+4. Copy bin/vpn.vars.example.ts to bin/vpn.vars.ts
