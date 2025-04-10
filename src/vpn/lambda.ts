@@ -1,28 +1,26 @@
-import * as cdk from "@aws-cdk/core";
-import { Function, Runtime, Code } from "@aws-cdk/aws-lambda";
-import { Rule, Schedule } from "@aws-cdk/aws-events";
-import * as targets from "@aws-cdk/aws-events-targets";
-import * as iam from "@aws-cdk/aws-iam";
+import { Construct } from 'constructs';
+import { Duration } from 'aws-cdk-lib'; 
+import { aws_iam as iam, aws_events_targets as targets, aws_events as events, aws_lambda as lambda} from 'aws-cdk-lib'; 
 import * as path from "path";
 
 type RemindingLambdaProps = {
   toAddress: string;
   fromAddress: string;
-  rate?: cdk.Duration;
+  rate?: Duration;
 };
-export class RemindingLambda extends cdk.Construct {
+export class RemindingLambda extends Construct {
   constructor(
-    scope: cdk.Construct,
+    scope: Construct,
     id: string,
-    { rate = cdk.Duration.hours(3), ...props }: RemindingLambdaProps
+    { rate = Duration.hours(3), ...props }: RemindingLambdaProps
   ) {
     super(scope, id);
 
     // Create the lambda
-    const fn = new Function(this, "EmailReminderLambda", {
-      runtime: Runtime.NODEJS_14_X,
+    const fn = new lambda.Function(this, "EmailReminderLambda", {
+      runtime: lambda.Runtime.NODEJS_18_X,
       handler: "index.handler",
-      code: Code.fromAsset(path.join(__dirname, "emailReminder")),
+      code: lambda.Code.fromAsset(path.join(__dirname, "emailReminder")),
       environment: {
         TO_ADDRESS: props.toAddress,
         FROM_EMAIL_ADDRESS: props.fromAddress,
@@ -41,8 +39,8 @@ export class RemindingLambda extends cdk.Construct {
     );
 
     // Schedule the email to be sent
-    const rule = new Rule(this, "ScheduleRule", {
-      schedule: Schedule.rate(rate),
+    const rule = new events.Rule(this, "ScheduleRule", {
+      schedule: events.Schedule.rate(rate),
     });
     rule.addTarget(new targets.LambdaFunction(fn));
   }

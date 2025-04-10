@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import "source-map-support/register";
-import * as cdk from "@aws-cdk/core";
+import { App } from 'aws-cdk-lib'; 
 import { VpnStack } from "../src/vpn/stack";
 import { VpcStack } from "../src/vpc-stack";
 import { vars } from "./vpn.vars";
@@ -10,7 +10,7 @@ const env = {
   region: process.env.CDK_DEPLOY_REGION || process.env.CDK_DEFAULT_REGION,
 };
 
-const app = new cdk.App();
+const app = new App();
 const vpcStack = new VpcStack(app, "VpcStack", { env });
 new VpnStack(app, "VpnStack", {
   env,
